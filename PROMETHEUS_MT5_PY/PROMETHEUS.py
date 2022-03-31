@@ -111,7 +111,7 @@ def getSignal(rates_frame):
                 if(Open[rightCandle]>SMA34RightCandle and Open[rightCandle]>SMA5RightCandle):
                     
                     # Check if it is trend
-                    if(SMA5RightCandle>SMA34RightCandle):
+                    if(SMA5LeftCandle>SMA34LeftCandle):
                         signal.append("BUY TREND")
     ######################################################################################
     # SELL SIGNAL
@@ -129,7 +129,7 @@ def getSignal(rates_frame):
                 if(Open[rightCandle]<SMA34RightCandle and Open[rightCandle]<SMA5RightCandle):
                 
                     # Check if it is trend
-                    if(SMA5RightCandle<SMA34RightCandle):
+                    if(SMA5LeftCandle<SMA34LeftCandle):
                         signal.append("SELL TREND")
     ######################################################################################
                 
