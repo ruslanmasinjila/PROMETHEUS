@@ -61,9 +61,9 @@ with open('instruments.txt') as f:
     currency_pairs = [line.rstrip('\n') for line in f]
 
 
-# USING ALL TIMEFRAMES IN MT5
-mt5Timeframe   = [M1]
-strTimeframe   = ["M1"]
+# TIMEFRAMES
+mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1,W1,MN1]
+strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1","W1","MN1"]
 
 numCandles     = 35
 offset = 1
@@ -80,7 +80,7 @@ def getSignal(rates_frame):
     rightCandle   = -1
     signal        = []
     
-    Time, Open, Close, High, Low = getTOCHL(rates_frame)
+    Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
     ######################################################################################
     
@@ -101,36 +101,44 @@ def getSignal(rates_frame):
     # Check if both candles are green
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
         
-        # Check if leftCandle opens below SMA34LeftCandle and SMA5LeftCandle
-        if(Open[leftCandle]<SMA34LeftCandle and Open[leftCandle]<SMA5LeftCandle):
+        # Check if low of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
+        if(Low[leftCandle]<SMA34LeftCandle and Low[leftCandle]<SMA5LeftCandle):
             
             # Check if leftCandle closes above SMA34LeftCandle and SMA5LeftCandle
             if(Close[leftCandle]>SMA34LeftCandle and Close[leftCandle]>SMA5LeftCandle):
                 
-                # Check if rightCandle opens above SMA34RightCandle and SMA5RightCandle
-                if(Open[rightCandle]>SMA34RightCandle and Open[rightCandle]>SMA5RightCandle):
+                # Check if low of rightCandle is above SMA34RightCandle and SMA5RightCandle
+                if(Low[rightCandle]>SMA34RightCandle and Low[rightCandle]>SMA5RightCandle):
                     
                     # Check if it is trend
                     if(SMA5LeftCandle>SMA34LeftCandle):
-                        signal.append("BUY TREND")
+                        
+                        # Check if volume increased
+                        if(Volume[leftCandle]>Volume[leftCandle-1]):
+                            signal.append("BUY")
+                            
     ######################################################################################
     # SELL SIGNAL
     
     # Check if both candles are red
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
         
-        # Check if leftCandle opens above SMA34LeftCandle and SMA5LeftCandle
-        if(Open[leftCandle]>SMA34LeftCandle and Open[leftCandle]>SMA5LeftCandle):
+        # Check if high of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
+        if(High[leftCandle]>SMA34LeftCandle and High[leftCandle]>SMA5LeftCandle):
             
             # Check if leftCandle closes below SMA34LeftCandle and SMA5LeftCandle
             if(Close[leftCandle]<SMA34LeftCandle and Close[leftCandle]<SMA5LeftCandle):
                 
-                # Check if rightCandle opens below SMA34RightCandle and SMA5RightCandle
-                if(Open[rightCandle]<SMA34RightCandle and Open[rightCandle]<SMA5RightCandle):
+                # Check if high of rightCandle is below SMA34RightCandle and SMA5RightCandle
+                if(High[rightCandle]<SMA34RightCandle and High[rightCandle]<SMA5RightCandle):
                 
                     # Check if it is trend
                     if(SMA5LeftCandle<SMA34LeftCandle):
-                        signal.append("SELL TREND")
+                        
+                        # Check if volume increased
+                        if(Volume[leftCandle]>Volume[leftCandle-1]):
+                            signal.append("SELL")
+                            
     ######################################################################################
                 
      
@@ -154,12 +162,13 @@ def getRates(currency_pair, mt5Timeframe, numCandles):
 
 
 # Decomposes the DataFrame into individual lists for Time, Close, High and Low
-def getTOCHL(rates_frame):
+def getTOCHLV(rates_frame):
     return  (list(rates_frame["time"]), 
             list(rates_frame["open"]), 
             list(rates_frame["close"]),
             list(rates_frame["high"]),
-            list(rates_frame["low"]))
+            list(rates_frame["low"]),
+            list(rates_frame["tick_volume"]))
 
 ##########################################################################################
 
