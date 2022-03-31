@@ -62,12 +62,8 @@ with open('instruments.txt') as f:
 
 
 # USING ALL TIMEFRAMES IN MT5
-#mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1,W1,MN1]
-#strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1","W1","MN1"]
-
-# USING ONLY M1-H1 TIMEFRAMES
-mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1]
-strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1"]
+mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1,W1,MN1]
+strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1","W1","MN1"]
 
 numCandles     = 35
 offset = 1
@@ -114,17 +110,9 @@ def getSignal(rates_frame):
                 # Check if rightCandle opens above SMA34RightCandle and SMA5RightCandle
                 if(Open[rightCandle]>SMA34RightCandle and Open[rightCandle]>SMA5RightCandle):
                     
-                    # Check if it is trend, reversal or crossing
+                    # Check if it is trend
                     if(SMA5RightCandle>SMA34RightCandle):
                         signal.append("BUY TREND")
-                    elif(SMA5RightCandle<SMA34RightCandle):
-                        signal.append("BUY REVERSAL")
-                    else:
-                        signal.append("BUY CROSSING")
-                        
-        
-        
-    
     ######################################################################################
     # SELL SIGNAL
     
@@ -140,14 +128,9 @@ def getSignal(rates_frame):
                 # Check if rightCandle opens below SMA34RightCandle and SMA5RightCandle
                 if(Open[rightCandle]<SMA34RightCandle and Open[rightCandle]<SMA5RightCandle):
                 
-                    # Check if it is trend, reversal or crossing
+                    # Check if it is trend
                     if(SMA5RightCandle<SMA34RightCandle):
                         signal.append("SELL TREND")
-                    elif(SMA5RightCandle>SMA34RightCandle):
-                        signal.append("SELL REVERSAL")
-                    else:
-                        signal.append("SELL CROSSING")
-                     
     ######################################################################################
                 
      
