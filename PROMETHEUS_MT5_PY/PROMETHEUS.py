@@ -101,14 +101,14 @@ def getSignal(rates_frame):
     # Check if both candles are green
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
         
-        # Check if low of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
-        if(Low[leftCandle]<SMA34LeftCandle and Low[leftCandle]<SMA5LeftCandle):
+        # Check if open of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
+        if(Open[leftCandle]<SMA34LeftCandle and Open[leftCandle]<SMA5LeftCandle):
             
-            # Check if leftCandle closes above SMA34LeftCandle and SMA5LeftCandle
+            # Check if close of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
             if(Close[leftCandle]>SMA34LeftCandle and Close[leftCandle]>SMA5LeftCandle):
                 
-                # Check if low of rightCandle is above SMA34RightCandle and SMA5RightCandle
-                if(Low[rightCandle]>SMA34RightCandle and Low[rightCandle]>SMA5RightCandle):
+                # Check if open of rightCandle is above SMA34RightCandle and SMA5RightCandle
+                if(Open[rightCandle]>SMA34RightCandle and Open[rightCandle]>SMA5RightCandle):
                     
                     # Check if it is trend
                     if(SMA5LeftCandle>SMA34LeftCandle):
@@ -123,14 +123,14 @@ def getSignal(rates_frame):
     # Check if both candles are red
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
         
-        # Check if high of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
-        if(High[leftCandle]>SMA34LeftCandle and High[leftCandle]>SMA5LeftCandle):
+        # Check if open of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
+        if(Open[leftCandle]>SMA34LeftCandle and Open[leftCandle]>SMA5LeftCandle):
             
-            # Check if leftCandle closes below SMA34LeftCandle and SMA5LeftCandle
+            # Check if close of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
             if(Close[leftCandle]<SMA34LeftCandle and Close[leftCandle]<SMA5LeftCandle):
                 
-                # Check if high of rightCandle is below SMA34RightCandle and SMA5RightCandle
-                if(High[rightCandle]<SMA34RightCandle and High[rightCandle]<SMA5RightCandle):
+                # Check if open of rightCandle is below SMA34RightCandle and SMA5RightCandle
+                if(Open[rightCandle]<SMA34RightCandle and Open[rightCandle]<SMA5RightCandle):
                 
                     # Check if it is trend
                     if(SMA5LeftCandle<SMA34LeftCandle):
