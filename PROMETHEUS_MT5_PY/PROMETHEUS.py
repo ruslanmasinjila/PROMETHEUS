@@ -91,7 +91,7 @@ def getSignal(rates_frame):
     
     if(Close[leftCandle]<Open[leftCandle]):
         if(Open[middleCandle]<Close[leftCandle]):
-            if(Close[middleCandle]>Close[leftCandle] and Close[middleCandle]<Open[leftCandle]):
+            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
                 if(Close[rightCandle]>Open[leftCandle] and Open[rightCandle]<Open[leftCandle]):
                     signal.append("BUY")
                     
@@ -100,7 +100,7 @@ def getSignal(rates_frame):
     
     if(Close[leftCandle]>Open[leftCandle]):
         if(Open[middleCandle]>Close[leftCandle]):
-            if(Close[middleCandle]<Close[leftCandle] and Close[middleCandle]>Open[leftCandle]):
+            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
                 if(Close[rightCandle]<Open[leftCandle] and Open[rightCandle]>Open[leftCandle]):
                     signal.append("SELL")                 
     ######################################################################################
