@@ -16,7 +16,8 @@ import os
 
 import winsound
 duration = 100
-freq = 1000
+freq1    = 1500
+freq2    = 1000
 
 # NUMBER OF COLUMNS TO BE DISPLAYED
 pd.set_option('display.max_columns', 500)
@@ -93,7 +94,8 @@ def getSignals(rates_frame,strTimeframe):
     # BUY SIGNAL
     
     if(Close[leftCandle]<Open[leftCandle]):
-        if(Open[middleCandle]<Close[leftCandle] and Close[middleCandle]>Close[leftCandle]):
+        if(Open[middleCandle]<Close[leftCandle]):
+            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
                 if(Close[rightCandle]>Open[leftCandle] and Open[rightCandle]<Open[leftCandle]):
                     DeMarkSignals.append("BUY")
                     DeMarkSignalsTF.append(strTimeframe)
@@ -102,11 +104,11 @@ def getSignals(rates_frame,strTimeframe):
     # SELL SIGNAL
     
     if(Close[leftCandle]>Open[leftCandle]):
-        if(Open[middleCandle]>Close[leftCandle] and Close[middleCandle]<Close[leftCandle]):
+        if(Open[middleCandle]>Close[leftCandle]):
+            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
                 if(Close[rightCandle]<Open[leftCandle] and Open[rightCandle]>Open[leftCandle]):
                     DeMarkSignals.append("SELL")
-                    DeMarkSignalsTF.append(strTimeframe)       
-                    
+                    DeMarkSignalsTF.append(strTimeframe)              
     ######################################################################################
                 
      
@@ -161,10 +163,12 @@ while(True):
             getSignals(rates_frame,strTimeframe[t])
             
         if(all(x == DeMarkSignals[0] for x in DeMarkSignals)):
-            if(len(DeMarkSignals)>=2):
-                display+=" ".join(DeMarkSignals)+"\n"
-                display+=" ".join(DeMarkSignalsTF)+"\n"
-                winsound.Beep(freq, duration)                
+            if(len(DeMarkSignals)>0):
+                winsound.Beep(freq1, duration)
+                display+="****************************** "+" ".join(DeMarkSignals)+"\n"
+                display+="****************************** "+" ".join(DeMarkSignalsTF)+"\n"
+                if(len(DeMarkSignals)>=2):
+                    winsound.Beep(freq2, duration)                
         display+="==============================\n"
     print(display)
     time.sleep(60)
