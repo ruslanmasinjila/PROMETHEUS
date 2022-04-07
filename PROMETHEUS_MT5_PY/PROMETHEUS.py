@@ -62,11 +62,14 @@ with open('instruments.txt') as f:
 
 
 # TIMEFRAMES
-mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1,W1,MN1]
-strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1","W1","MN1"]
+mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
+strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
 
 numCandles     = 3
 offset = 1
+
+DeMarkSignals = []
+DeMarkSignalsTF = []
 
 ##########################################################################################
 
@@ -74,7 +77,7 @@ offset = 1
 # In[ ]:
 
 
-def getSignal(rates_frame):
+def getSignals(rates_frame,strTimeframe):
     
     rightCandle     = -1
     middleCandle    = -2
@@ -90,19 +93,20 @@ def getSignal(rates_frame):
     # BUY SIGNAL
     
     if(Close[leftCandle]<Open[leftCandle]):
-        if(Open[middleCandle]<Close[leftCandle]):
-            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
+        if(Open[middleCandle]<Close[leftCandle] and Close[middleCandle]>Close[leftCandle]):
                 if(Close[rightCandle]>Open[leftCandle] and Open[rightCandle]<Open[leftCandle]):
-                    signal.append("BUY")
+                    DeMarkSignals.append("BUY")
+                    DeMarkSignalsTF.append(strTimeframe)
                     
     ######################################################################################
     # SELL SIGNAL
     
     if(Close[leftCandle]>Open[leftCandle]):
-        if(Open[middleCandle]>Close[leftCandle]):
-            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
+        if(Open[middleCandle]>Close[leftCandle] and Close[middleCandle]<Close[leftCandle]):
                 if(Close[rightCandle]<Open[leftCandle] and Open[rightCandle]>Open[leftCandle]):
-                    signal.append("SELL")                 
+                    DeMarkSignals.append("SELL")
+                    DeMarkSignalsTF.append(strTimeframe)       
+                    
     ######################################################################################
                 
      
@@ -148,18 +152,24 @@ while(True):
     
     display = banner
     for cp in currency_pairs:
-        display+=cp+"\n"
+        display+="["+cp+"]"+"\n"
+        DeMarkSignals =[]
+        DeMarkSignalsTF =[]
         for t in range(len(mt5Timeframe)):
             
             rates_frame = getRates(cp, mt5Timeframe[t], numCandles)
-            signal=getSignal(rates_frame)
-            if(len(signal)>0):
-                winsound.Beep(freq, duration)
-                display+=signal[0] + " ********************************* " + strTimeframe[t]+"\n"
-                
+            getSignals(rates_frame,strTimeframe[t])
+            
+        if(all(x == DeMarkSignals[0] for x in DeMarkSignals)):
+            if(len(DeMarkSignals)>=2):
+                display+=" ".join(DeMarkSignals)+"\n"
+                display+=" ".join(DeMarkSignalsTF)+"\n"
+                winsound.Beep(freq, duration)                
         display+="==============================\n"
     print(display)
     time.sleep(60)
+    
+     
     os.system('cls' if os.name == 'nt' else 'clear')
 print("DONE")
 
