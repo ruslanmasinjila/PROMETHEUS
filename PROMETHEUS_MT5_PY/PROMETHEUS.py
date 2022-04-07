@@ -65,7 +65,7 @@ with open('instruments.txt') as f:
 mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1,W1,MN1]
 strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1","W1","MN1"]
 
-numCandles     = 35
+numCandles     = 3
 offset = 1
 
 ##########################################################################################
@@ -76,69 +76,49 @@ offset = 1
 
 def getSignal(rates_frame):
     
-    leftCandle    = -2
-    rightCandle   = -1
+    rightCandle     = -1
+    middleCandle    = -2
+    leftCandle      = -3
+    
     signal        = []
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    ######################################################################################
-    
-    HL = (np.array(High) + np.array(Low))/2
-    
-    ######################################################################################
-    
-    SMA34LeftCandle  = np.mean(HL[-35:-1])
-    SMA34RightCandle = np.mean(HL[-34:])
-
-    SMA5LeftCandle   = np.mean(HL[-6:-1])
-    SMA5RightCandle  = np.mean(HL[-5:])
-    
+    leftCandleMidPoint = (Open[leftCandle] + Close[leftCandle])/2
     
     ######################################################################################
     # BUY SIGNAL
     
-    # Check if both candles are green
-    if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
+    # Check if the leftCandle is Red
+    if(Close[leftCandle]<Open[leftCandle]):
         
-        # Check if open of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
-        if(Open[leftCandle]<SMA34LeftCandle and Open[leftCandle]<SMA5LeftCandle):
+        # Check if Open of the middleCandle is below the Close of the leftCandle
+        if(Open[middleCandle]<Close[leftCandle]):
             
-            # Check if close of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
-            if(Close[leftCandle]>SMA34LeftCandle and Close[leftCandle]>SMA5LeftCandle):
+            # Check if Close of the middleCandle is above leftCandleMidPoint and below Open of the leftCandle
+            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
                 
-                # Check if open of rightCandle is above SMA34RightCandle and SMA5RightCandle
-                if(Open[rightCandle]>SMA34RightCandle and Open[rightCandle]>SMA5RightCandle):
+                # Check if the rightCandle is Green [confirmation]
+                if(Close[rightCandle]>Open[rightCandle]):
                     
-                    # Check if it is trend
-                    if(SMA5LeftCandle>SMA34LeftCandle):
-                        
-                        # Check if volume increased
-                        if(Volume[leftCandle]>Volume[leftCandle-1]):
-                            signal.append("BUY")
-                            
+                    signal.append("BUY")
+                    
     ######################################################################################
     # SELL SIGNAL
     
-    # Check if both candles are red
-    if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
+    # Check if the leftCandle is Green
+    if(Close[leftCandle]>Open[leftCandle]):
         
-        # Check if open of leftCandle is above SMA34LeftCandle and SMA5LeftCandle
-        if(Open[leftCandle]>SMA34LeftCandle and Open[leftCandle]>SMA5LeftCandle):
+        # Check if Open of the middleCandle is above the Close of the leftCandle
+        if(Open[middleCandle]>Close[leftCandle]):
             
-            # Check if close of leftCandle is below SMA34LeftCandle and SMA5LeftCandle
-            if(Close[leftCandle]<SMA34LeftCandle and Close[leftCandle]<SMA5LeftCandle):
+            # Check if Close of the middleCandle is below leftCandleMidPoint and above Open of the leftCandle
+            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
                 
-                # Check if open of rightCandle is below SMA34RightCandle and SMA5RightCandle
-                if(Open[rightCandle]<SMA34RightCandle and Open[rightCandle]<SMA5RightCandle):
-                
-                    # Check if it is trend
-                    if(SMA5LeftCandle<SMA34LeftCandle):
-                        
-                        # Check if volume increased
-                        if(Volume[leftCandle]>Volume[leftCandle-1]):
-                            signal.append("SELL")
-                            
+                # Check if the rightCandle is Red [confirmation]
+                if(Close[rightCandle]<Open[rightCandle]):
+                    
+                    signal.append("SELL")                    
     ######################################################################################
                 
      
