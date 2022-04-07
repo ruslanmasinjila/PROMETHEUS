@@ -89,36 +89,20 @@ def getSignal(rates_frame):
     ######################################################################################
     # BUY SIGNAL
     
-    # Check if the leftCandle is Red
     if(Close[leftCandle]<Open[leftCandle]):
-        
-        # Check if Open of the middleCandle is below the Close of the leftCandle
         if(Open[middleCandle]<Close[leftCandle]):
-            
-            # Check if Close of the middleCandle is above leftCandleMidPoint and below Open of the leftCandle
-            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
-                
-                # Check if the rightCandle is Green [confirmation]
-                if(Close[rightCandle]>Open[rightCandle]):
-                    
+            if(Close[middleCandle]>Close[leftCandle] and Close[middleCandle]<Open[leftCandle]):
+                if(Close[rightCandle]>Open[leftCandle] and Open[rightCandle]<Open[leftCandle]):
                     signal.append("BUY")
                     
     ######################################################################################
     # SELL SIGNAL
     
-    # Check if the leftCandle is Green
     if(Close[leftCandle]>Open[leftCandle]):
-        
-        # Check if Open of the middleCandle is above the Close of the leftCandle
         if(Open[middleCandle]>Close[leftCandle]):
-            
-            # Check if Close of the middleCandle is below leftCandleMidPoint and above Open of the leftCandle
-            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
-                
-                # Check if the rightCandle is Red [confirmation]
-                if(Close[rightCandle]<Open[rightCandle]):
-                    
-                    signal.append("SELL")                    
+            if(Close[middleCandle]<Close[leftCandle] and Close[middleCandle]>Open[leftCandle]):
+                if(Close[rightCandle]<Open[leftCandle] and Open[rightCandle]>Open[leftCandle]):
+                    signal.append("SELL")                 
     ######################################################################################
                 
      
