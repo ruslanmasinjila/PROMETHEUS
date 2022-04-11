@@ -121,6 +121,7 @@ def getSignal(rates_frame):
                 else:
                     signal.append("BUY ENGULFING")
                 return signal
+    ######################################################################################
 
     return signal
 
