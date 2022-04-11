@@ -16,8 +16,7 @@ import os
 
 import winsound
 duration = 100
-freq1    = 1500
-freq2    = 1000
+freq     = 1000
 
 # NUMBER OF COLUMNS TO BE DISPLAYED
 pd.set_option('display.max_columns', 500)
@@ -66,7 +65,7 @@ with open('instruments.txt') as f:
 mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
 strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
 
-numCandles     = 3
+numCandles     = 2
 offset = 1
 
 DeMarkSignals = []
@@ -78,39 +77,71 @@ DeMarkSignalsTF = []
 # In[ ]:
 
 
-def getSignals(rates_frame,strTimeframe):
+def getSignal(rates_frame):
     
-    rightCandle     = -1
-    middleCandle    = -2
-    leftCandle      = -3
-    
+    leftCandle    = -2
+    rightCandle   = -1
     signal        = []
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    leftCandleMidPoint = (Open[leftCandle] + Close[leftCandle])/2
+    Difference = High[leftCandle] - Low[leftCandle]
+    upperBound = High[leftCandle] - 0.3*Difference
+    lowerBound = Low[leftCandle]  + 0.3*Difference
     
+    
+
+                        
     ######################################################################################
-    # BUY SIGNAL
+    # Supper SELL
+    if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
+        if(Open[rightCandle]>Open[leftCandle] and Close[rightCandle]<Close[leftCandle]):
+            signal.append("SELL SUPER")
+            return signal
+        
+    # Bearigh Engulfing on an inverted Hammer or Shooting Star
+    if(Open[leftCandle]<lowerBound and Close[leftCandle]<lowerBound):
+        if(Open[rightCandle]>Open[leftCandle] and Open[rightCandle]>Close[leftCandle]):
+            if(Close[rightCandle]<Open[leftCandle] and Close[rightCandle]<Close[leftCandle]):
+                if(Low[leftCandle]==Close[leftCandle]):
+                    signal.append("SELL SUPER ENGULFING")
+                else:
+                    signal.append("SELL ENGULFING")
+                return signal
     
-    if(Close[leftCandle]<Open[leftCandle]):
-        if(Open[middleCandle]<Close[leftCandle]):
-            if(Close[middleCandle]>leftCandleMidPoint and Close[middleCandle]<Open[leftCandle]):
-                if(Close[rightCandle]>Open[leftCandle] and Open[rightCandle]<Open[leftCandle]):
-                    DeMarkSignals.append("BUY")
-                    DeMarkSignalsTF.append(strTimeframe)
+    # Inverted Hammer or Shooting Star with one long wick only
+    if(Open[leftCandle]<lowerBound and Close[leftCandle]<lowerBound):
+        if(Low[leftCandle]==Close[leftCandle] or Low[leftCandle]==Open[leftCandle]):
+            signal.append("CHECK")
+    
+        
+    ######################################################################################
+    # Super BUY
+    if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
+        if(Open[rightCandle]<Open[leftCandle] and Close[rightCandle]>Close[leftCandle]):
+            signal.append("BUY SUPER")
+            return signal
+        
+    # Bullish Engulfing on an Hammer or Hanging man
+    if(Open[leftCandle]>upperBound and Close[leftCandle]>upperBound):
+        if(Open[rightCandle]<Open[leftCandle] and Open[rightCandle]<Close[leftCandle]):
+            if(Close[rightCandle]>Open[leftCandle] and Close[rightCandle]>Close[leftCandle]):
+                if(High[leftCandle]==Close[leftCandle]):
+                    signal.append("BUY SUPER ENGULFING")
+                 
+                else:
+                    signal.append("BUY ENGULFING")
+                return signal
+            
+    # Hammer or Hanging man with one long wick only
+    if(Open[leftCandle]>upperBound and Close[leftCandle]>upperBound):
+        if(High[leftCandle]==Close[leftCandle] or High[leftCandle]==Open[leftCandle]):
+            signal.append("CHECK")
+    
+    
                     
-    ######################################################################################
-    # SELL SIGNAL
     
-    if(Close[leftCandle]>Open[leftCandle]):
-        if(Open[middleCandle]>Close[leftCandle]):
-            if(Close[middleCandle]<leftCandleMidPoint and Close[middleCandle]>Open[leftCandle]):
-                if(Close[rightCandle]<Open[leftCandle] and Open[rightCandle]>Open[leftCandle]):
-                    DeMarkSignals.append("SELL")
-                    DeMarkSignalsTF.append(strTimeframe)              
-    ######################################################################################
-                
+
      
     return signal
 
@@ -154,26 +185,18 @@ while(True):
     
     display = banner
     for cp in currency_pairs:
-        display+="["+cp+"]"+"\n"
-        DeMarkSignals =[]
-        DeMarkSignalsTF =[]
+        display+=cp+"\n"
         for t in range(len(mt5Timeframe)):
             
             rates_frame = getRates(cp, mt5Timeframe[t], numCandles)
-            getSignals(rates_frame,strTimeframe[t])
-            
-        if(all(x == DeMarkSignals[0] for x in DeMarkSignals)):
-            if(len(DeMarkSignals)>0):
-                winsound.Beep(freq1, duration)
-                display+="****************************** "+" ".join(DeMarkSignals)+"\n"
-                display+="****************************** "+" ".join(DeMarkSignalsTF)+"\n"
-                if(len(DeMarkSignals)>=2):
-                    winsound.Beep(freq2, duration)                
+            signal=getSignal(rates_frame)
+            if(len(signal)>0):
+                winsound.Beep(freq, duration)
+                display+=signal[0] + " ********************************* " + strTimeframe[t]+"\n"
+                
         display+="==============================\n"
     print(display)
     time.sleep(60)
-    
-     
     os.system('cls' if os.name == 'nt' else 'clear')
 print("DONE")
 
