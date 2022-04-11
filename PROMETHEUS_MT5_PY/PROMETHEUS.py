@@ -87,11 +87,7 @@ def getSignal(rates_frame):
     
     Difference = High[leftCandle] - Low[leftCandle]
     upperBound = High[leftCandle] - 0.3*Difference
-    lowerBound = Low[leftCandle]  + 0.3*Difference
-    
-    
-
-                        
+    lowerBound = Low[leftCandle]  + 0.3*Difference               
     ######################################################################################
     # Supper SELL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
@@ -108,7 +104,6 @@ def getSignal(rates_frame):
                 else:
                     signal.append("SELL ENGULFING")
                 return signal
-      
     ######################################################################################
     # Super BUY
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
