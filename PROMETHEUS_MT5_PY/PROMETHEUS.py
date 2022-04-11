@@ -101,10 +101,10 @@ def getSignal(rates_frame):
         
     # Bearigh Engulfing on an inverted Hammer or Shooting Star
     if(Open[leftCandle]<lowerBound and Close[leftCandle]<lowerBound):
-        if(Open[rightCandle]>Open[leftCandle] and Open[rightCandle]>Close[leftCandle]):
+        if(Open[rightCandle]>=Open[leftCandle] and Open[rightCandle]>=Close[leftCandle]):
             if(Close[rightCandle]<Open[leftCandle] and Close[rightCandle]<Close[leftCandle]):
                 if(Low[leftCandle]==Close[leftCandle]):
-                    signal.append("SELL SUPER ENGULFING")
+                    signal.append("SELL ENGULFING SUPER")
                 else:
                     signal.append("SELL ENGULFING")
                 return signal
@@ -118,10 +118,10 @@ def getSignal(rates_frame):
         
     # Bullish Engulfing on an Hammer or Hanging man
     if(Open[leftCandle]>upperBound and Close[leftCandle]>upperBound):
-        if(Open[rightCandle]<Open[leftCandle] and Open[rightCandle]<Close[leftCandle]):
+        if(Open[rightCandle]<=Open[leftCandle] and Open[rightCandle]<=Close[leftCandle]):
             if(Close[rightCandle]>Open[leftCandle] and Close[rightCandle]>Close[leftCandle]):
                 if(High[leftCandle]==Close[leftCandle]):
-                    signal.append("BUY SUPER ENGULFING")
+                    signal.append("BUY ENGULFING SUPER")
                  
                 else:
                     signal.append("BUY ENGULFING")
