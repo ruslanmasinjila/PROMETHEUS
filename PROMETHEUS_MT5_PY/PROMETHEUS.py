@@ -108,13 +108,7 @@ def getSignal(rates_frame):
                 else:
                     signal.append("SELL ENGULFING")
                 return signal
-    
-    # Inverted Hammer or Shooting Star with one long wick only
-    if(Open[leftCandle]<lowerBound and Close[leftCandle]<lowerBound):
-        if(Low[leftCandle]==Close[leftCandle] or Low[leftCandle]==Open[leftCandle]):
-            signal.append("CHECK")
-    
-        
+      
     ######################################################################################
     # Super BUY
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
@@ -132,17 +126,7 @@ def getSignal(rates_frame):
                 else:
                     signal.append("BUY ENGULFING")
                 return signal
-            
-    # Hammer or Hanging man with one long wick only
-    if(Open[leftCandle]>upperBound and Close[leftCandle]>upperBound):
-        if(High[leftCandle]==Close[leftCandle] or High[leftCandle]==Open[leftCandle]):
-            signal.append("CHECK")
-    
-    
-                    
-    
 
-     
     return signal
 
 
