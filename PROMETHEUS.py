@@ -89,25 +89,10 @@ def getSignal(rates_frame):
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
     ######################################################################################
-    
-    HL = (np.array(High) + np.array(Low))/2
-    
-    ######################################################################################
-    
-    SMA34SecondCandle  = np.mean(HL[:-1])
-    STD34SecondCandle  = np.std(HL[:-1])
-    
-    upperBoundSecondCandle = SMA34SecondCandle + 2.0*STD34SecondCandle
-    lowerBoundSecondCandle = SMA34SecondCandle - 2.0*STD34SecondCandle
-
-    ######################################################################################
     # BUY SIGNAL
     
     # Check if the secondCandle is RED
     if(Close[secondCandle]<Open[secondCandle]):
-        
-        # Check if the secondCandle OPENS and CLOSES BELOW the lowerBoundSecondCandle
-        if(Open[secondCandle]<lowerBoundSecondCandle and Close[secondCandle]<lowerBoundSecondCandle):
             
             # Check if the firstCandle is GREEN
             if(Close[firstCandle]>Open[firstCandle]):
@@ -128,10 +113,7 @@ def getSignal(rates_frame):
     
     # Check if the secondCandle is GREEN
     if(Close[secondCandle]>Open[secondCandle]): #
-        
-        # Check if the secondCandle OPENS and CLOSES ABOVE the upperBoundSecondCandle
-        if(Open[secondCandle]>upperBoundSecondCandle and Close[secondCandle]>upperBoundSecondCandle):
-            
+         
             # Check if the firstCandle is RED
             if(Close[firstCandle]<Open[firstCandle]):
                 
