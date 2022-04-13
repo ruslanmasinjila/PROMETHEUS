@@ -65,12 +65,8 @@ with open('instruments.txt') as f:
 mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
 strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
 
-numCandles     = 2
+numCandles     = 35
 offset = 1
-
-DeMarkSignals = []
-DeMarkSignalsTF = []
-
 ##########################################################################################
 
 
@@ -79,50 +75,44 @@ DeMarkSignalsTF = []
 
 def getSignal(rates_frame):
     
-    leftCandle    = -2
-    rightCandle   = -1
+    firstCandle     = -1
+    secondCandle    = -2
+    thirdCandle     = -3
+    fourthCandle    = -4
+    fifthCandle     = -5
+    sixthCandle     = -6
+    seventhCandle   = -7
+    
+    
     signal        = []
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    Difference = High[leftCandle] - Low[leftCandle]
-    upperBound = High[leftCandle] - 0.3*Difference
-    lowerBound = Low[leftCandle]  + 0.3*Difference               
     ######################################################################################
-    # Supper SELL
-    if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        if(Open[rightCandle]>Open[leftCandle] and Close[rightCandle]<Close[leftCandle]):
-            signal.append("SELL SUPER")
-            return signal
-        
-    # Bearigh Engulfing on an inverted Hammer or Shooting Star
-    if(Open[leftCandle]<lowerBound and Close[leftCandle]<lowerBound):
-        if(Open[rightCandle]>=Open[leftCandle] and Open[rightCandle]>=Close[leftCandle]):
-            if(Close[rightCandle]<Open[leftCandle] and Close[rightCandle]<Close[leftCandle]):
-                if(Low[leftCandle]==Close[leftCandle]):
-                    signal.append("SELL ENGULFING SUPER")
-                else:
-                    signal.append("SELL ENGULFING")
-                return signal
+    
+    HL = (np.array(High) + np.array(Low))/2
+    
+    
+    
     ######################################################################################
-    # Super BUY
-    if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        if(Open[rightCandle]<Open[leftCandle] and Close[rightCandle]>Close[leftCandle]):
-            signal.append("BUY SUPER")
-            return signal
-        
-    # Bullish Engulfing on an Hammer or Hanging man
-    if(Open[leftCandle]>upperBound and Close[leftCandle]>upperBound):
-        if(Open[rightCandle]<=Open[leftCandle] and Open[rightCandle]<=Close[leftCandle]):
-            if(Close[rightCandle]>Open[leftCandle] and Close[rightCandle]>Close[leftCandle]):
-                if(High[leftCandle]==Close[leftCandle]):
-                    signal.append("BUY ENGULFING SUPER")
-                 
-                else:
-                    signal.append("BUY ENGULFING")
-                return signal
-    ######################################################################################
+    
+    SMA34SecondCandle  = np.mean(HL[:-1])
+    STD34SecondCandle  = np.std(HL[:-1])
+    
+    upperBoundSecondCandle = SMA34SecondCandle + 2.0*STD34SecondCandle
+    lowerBoundSecondCandle = SMA34SecondCandle - 2.0*STD34SecondCandle
 
+    ######################################################################################
+    # BUY SIGNAL
+    
+
+                            
+    ######################################################################################
+    # SELL SIGNAL
+                            
+    ######################################################################################
+                
+     
     return signal
 
 
