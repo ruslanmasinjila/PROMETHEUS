@@ -92,8 +92,6 @@ def getSignal(rates_frame):
     
     HL = (np.array(High) + np.array(Low))/2
     
-    
-    
     ######################################################################################
     
     SMA34SecondCandle  = np.mean(HL[:-1])
@@ -105,10 +103,49 @@ def getSignal(rates_frame):
     ######################################################################################
     # BUY SIGNAL
     
-
-                            
+    # Check if the secondCandle is RED
+    if(Close[secondCandle]<Open[secondCandle]):
+        
+        # Check if the secondCandle OPENS and CLOSES BELOW the lowerBoundSecondCandle
+        if(Open[secondCandle]<lowerBoundSecondCandle and Close[secondCandle]<lowerBoundSecondCandle):
+            
+            # Check if the firstCandle is GREEN
+            if(Close[firstCandle]>Open[firstCandle]):
+                
+                # Check if the firstCandle ENGULFS the secondCandle
+                if(Open[firstCandle]<=Close[secondCandle] and Close[firstCandle]>Open[secondCandle]):
+                    
+                    # Check if the thirdCandle through the seventhCandle are ALL RED
+                    if(Close[thirdCandle]  < Open[thirdCandle]  and
+                       Close[fourthCandle] < Open[fourthCandle] and
+                       Close[fifthCandle]  < Open[fifthCandle]  and
+                       Close[sixthCandle]  < Open[sixthCandle]  and
+                       Close[seventhCandle]< Open[seventhCandle]):
+                        signal.append("BUY")
+                        return signal               
     ######################################################################################
     # SELL SIGNAL
+    
+    # Check if the secondCandle is GREEN
+    if(Close[secondCandle]>Open[secondCandle]): #
+        
+        # Check if the secondCandle OPENS and CLOSES ABOVE the upperBoundSecondCandle
+        if(Open[secondCandle]>upperBoundSecondCandle and Close[secondCandle]>upperBoundSecondCandle):
+            
+            # Check if the firstCandle is RED
+            if(Close[firstCandle]<Open[firstCandle]):
+                
+                # Check if the firstCandle ENGULFS the secondCandle
+                if(Open[firstCandle]>=Close[secondCandle] and Close[firstCandle]<Open[secondCandle]):
+                    
+                    # Check if the thirdCandle through the seventhCandle are ALL GREEN
+                    if(Close[thirdCandle]  > Open[thirdCandle]  and
+                       Close[fourthCandle] > Open[fourthCandle] and
+                       Close[fifthCandle]  > Open[fifthCandle]  and
+                       Close[sixthCandle]  > Open[sixthCandle]  and
+                       Close[seventhCandle]> Open[seventhCandle]):
+                        signal.append("SELL")
+                        return signal   
                             
     ######################################################################################
                 
