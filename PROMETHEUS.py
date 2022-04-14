@@ -96,8 +96,14 @@ def getSignal(rates_frame):
             
             # Check if the rightCandle ENGULFS the leftCandle
             if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>Open[leftCandle]):
-                signal.append("BUY")
-                return signal
+                
+                # Calculate BW MFI
+                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
+                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
+                
+                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
+                    signal.append("BUY")
+                    return signal
         
                 
     ######################################################################################
@@ -111,8 +117,14 @@ def getSignal(rates_frame):
             
             # Check if the rightCandle ENGULFS the leftCandle
             if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Open[leftCandle]):
-                signal.append("SELL")
-                return signal
+                
+                # Calculate BW MFI
+                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
+                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
+                
+                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
+                    signal.append("SELL")
+                    return signal
     
                             
     ######################################################################################
