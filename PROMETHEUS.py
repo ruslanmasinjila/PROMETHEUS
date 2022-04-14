@@ -65,7 +65,7 @@ with open('instruments.txt') as f:
 mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
 strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
 
-numCandles     = 35
+numCandles     = 2
 offset = 1
 ##########################################################################################
 
@@ -75,63 +75,47 @@ offset = 1
 
 def getSignal(rates_frame):
     
-    firstCandle     = -1
-    secondCandle    = -2
-    thirdCandle     = -3
-    fourthCandle    = -4
-    fifthCandle     = -5
-    sixthCandle     = -6
-    seventhCandle   = -7
+    rightCandle   = -1
+    leftCandle    = -2
     
     
     signal        = []
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
+    precision = 0.00001
+    
     ######################################################################################
     # BUY SIGNAL
     
-    # Check if the secondCandle is RED
-    if(Close[secondCandle]<Open[secondCandle]):
+    # Check if the LOWS are within the precision
+    if(abs(Low[leftCandle]-Low[rightCandle])<=precision):
+        
+        # Check if leftCandle is RED and rightCandle is GREEN
+        if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
             
-            # Check if the firstCandle is GREEN
-            if(Close[firstCandle]>Open[firstCandle]):
+            # Check if the rightCandle ENGULFS the leftCandle
+            if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>Open[leftCandle]):
+                signal.append("BUY")
+                return signal
+        
                 
-                # Check if the firstCandle ENGULFS the secondCandle
-                if(Open[firstCandle]<=Close[secondCandle] and Close[firstCandle]>Open[secondCandle]):
-                    
-                    # Check if the thirdCandle through the seventhCandle are ALL RED
-                    if(Close[thirdCandle]  < Open[thirdCandle]  and
-                       Close[fourthCandle] < Open[fourthCandle] and
-                       Close[fifthCandle]  < Open[fifthCandle]  and
-                       Close[sixthCandle]  < Open[sixthCandle]  and
-                       Close[seventhCandle]< Open[seventhCandle]):
-                        signal.append("BUY")
-                        return signal               
     ######################################################################################
     # SELL SIGNAL
     
-    # Check if the secondCandle is GREEN
-    if(Close[secondCandle]>Open[secondCandle]): #
-         
-            # Check if the firstCandle is RED
-            if(Close[firstCandle]<Open[firstCandle]):
-                
-                # Check if the firstCandle ENGULFS the secondCandle
-                if(Open[firstCandle]>=Close[secondCandle] and Close[firstCandle]<Open[secondCandle]):
-                    
-                    # Check if the thirdCandle through the seventhCandle are ALL GREEN
-                    if(Close[thirdCandle]  > Open[thirdCandle]  and
-                       Close[fourthCandle] > Open[fourthCandle] and
-                       Close[fifthCandle]  > Open[fifthCandle]  and
-                       Close[sixthCandle]  > Open[sixthCandle]  and
-                       Close[seventhCandle]> Open[seventhCandle]):
-                        signal.append("SELL")
-                        return signal   
+    # Check if the HIGHS are within the precision
+    if(abs(High[leftCandle]-High[rightCandle])<=precision):
+        
+        # Check if leftCandle is GREEN and rightCandle is RED
+        if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
+            
+            # Check if the rightCandle ENGULFS the leftCandle
+            if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Open[leftCandle]):
+                signal.append("SELL")
+                return signal
+    
                             
     ######################################################################################
-                
-     
     return signal
 
 
