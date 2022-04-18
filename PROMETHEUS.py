@@ -83,7 +83,7 @@ def getSignal(rates_frame):
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    precision = 0.00004
+    precision = 0.00001
     
     ######################################################################################
     # BUY SIGNAL
