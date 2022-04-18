@@ -88,8 +88,10 @@ def getSignal(rates_frame):
     ######################################################################################
     # BUY SIGNAL
     
+    
     # Check if the LOWS are within the precision
-    if(abs(Low[leftCandle]-Low[rightCandle])<=precision):
+    LLD = abs(Low[leftCandle]-Low[rightCandle])
+    if(LLD<=precision):
         
         # Check if leftCandle is RED and rightCandle is GREEN
         if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
@@ -102,7 +104,7 @@ def getSignal(rates_frame):
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
                 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("BUY")
+                    signal.append("BUY P = "+f'{LLD:.5f}')
                     return signal
         
                 
@@ -110,7 +112,8 @@ def getSignal(rates_frame):
     # SELL SIGNAL
     
     # Check if the HIGHS are within the precision
-    if(abs(High[leftCandle]-High[rightCandle])<=precision):
+    HHD = abs(High[leftCandle]-High[rightCandle])
+    if(HHD<=precision):
         
         # Check if leftCandle is GREEN and rightCandle is RED
         if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
@@ -123,7 +126,7 @@ def getSignal(rates_frame):
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
                 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("SELL")
+                    signal.append("SELL P = "+f'{HHD:.5f}')
                     return signal
     
                             
