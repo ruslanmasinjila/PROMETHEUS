@@ -97,7 +97,7 @@ def getSignal(rates_frame):
         if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
             
             # Check if the rightCandle ENGULFS the leftCandle
-            if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>Open[leftCandle]):
+            if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
@@ -119,7 +119,7 @@ def getSignal(rates_frame):
         if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
             
             # Check if the rightCandle ENGULFS the leftCandle
-            if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Open[leftCandle]):
+            if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
