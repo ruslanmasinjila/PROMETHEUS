@@ -83,7 +83,7 @@ def getSignal(rates_frame):
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    precision = 0.00002
+    precision = 0.00004
     
     ######################################################################################
     # BUY SIGNAL
@@ -93,17 +93,20 @@ def getSignal(rates_frame):
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
 
         # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
+        if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
             
             # Check Low-to-Body (LTB) difference
-            if(abs(Low[leftCandle]-Close[leftCandle])<=precision and abs(Low[rightCandle]-Open[rightCandle])<=precision ):
+            LLTB = abs(Low[leftCandle]-Close[leftCandle])<=precision
+            RLTB = abs(Low[rightCandle]-Open[rightCandle])<=precision
+            
+            if( LLTB and RLTB  ):
 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("BUY")
+                    signal.append("BUY P = " + f'{LLTB:.5f}' + " " + f'{RLTB:.5f}')
                     return signal
         
                 
@@ -115,17 +118,20 @@ def getSignal(rates_frame):
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
 
         # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
+        if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
             
             # Check High-to-Body (HTB) difference
-            if(abs(High[leftCandle]-Close[leftCandle])<=precision and abs(High[rightCandle]-Open[rightCandle])<=precision ):
+            LHTB = abs(High[leftCandle]-Close[leftCandle])<=precision
+            RHTB = abs(High[rightCandle]-Open[rightCandle])<=precision
+            
+            if( LHTB and RHTB ):
 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("SELL")
+                    signal.append("SELL P = " + f'{LHTB:.5f}' + " " + f'{RHTB:.5f}')
                     return signal
 
                             
