@@ -93,7 +93,7 @@ def getSignal(rates_frame):
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
 
         # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
+        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
             
             # Check Low-to-Body (LTB) difference
             LLTB = abs(Low[leftCandle]-Close[leftCandle])<=precision
@@ -118,7 +118,7 @@ def getSignal(rates_frame):
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
 
         # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
+        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
             
             # Check High-to-Body (HTB) difference
             LHTB = abs(High[leftCandle]-Close[leftCandle])<=precision
