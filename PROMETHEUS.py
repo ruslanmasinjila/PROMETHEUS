@@ -80,13 +80,14 @@ def getSignal(rates_frame):
     
     
     signal        = []
+    allowance     = 0.00001
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
     ######################################################################################
     # BUY SIGNAL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
+        if(abs(Low[leftCandle]-Close[leftCandle])<=allowance and Low[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
                 signal.append("BUY")
 
@@ -95,7 +96,7 @@ def getSignal(rates_frame):
     ######################################################################################
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
+        if(abs(High[leftCandle]-Close[leftCandle])<=allowance and High[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
                 signal.append("SELL")
 
