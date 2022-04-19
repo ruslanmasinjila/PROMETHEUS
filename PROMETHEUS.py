@@ -96,10 +96,10 @@ def getSignal(rates_frame):
         if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
             
             # Check Low-to-Body (LTB) difference
-            LLTB = abs(Low[leftCandle]-Close[leftCandle])<=precision
-            RLTB = abs(Low[rightCandle]-Open[rightCandle])<=precision
+            LLTB = abs(Low[leftCandle]-Close[leftCandle])
+            RLTB = abs(Low[rightCandle]-Open[rightCandle])
             
-            if( LLTB and RLTB  ):
+            if( LLTB<=precision and RLTB<=precision  ):
 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
@@ -121,10 +121,10 @@ def getSignal(rates_frame):
         if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
             
             # Check High-to-Body (HTB) difference
-            LHTB = abs(High[leftCandle]-Close[leftCandle])<=precision
-            RHTB = abs(High[rightCandle]-Open[rightCandle])<=precision
+            LHTB = abs(High[leftCandle]-Close[leftCandle])
+            RHTB = abs(High[rightCandle]-Open[rightCandle])
             
-            if( LHTB and RHTB ):
+            if( LHTB<=precision and RHTB<=precision ):
 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
