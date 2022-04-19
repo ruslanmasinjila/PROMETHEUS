@@ -97,8 +97,14 @@ def getSignal(rates_frame):
             
             # Check Low-to-Body (LTB) difference
             if(abs(Low[leftCandle]-Close[leftCandle])<=precision and abs(Low[rightCandle]-Open[rightCandle])<=precision ):
-                signal.append("BUY")
-                return signal
+
+                # Calculate BW MFI
+                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
+                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
+
+                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
+                    signal.append("BUY")
+                    return signal
         
                 
     ######################################################################################
@@ -113,8 +119,14 @@ def getSignal(rates_frame):
             
             # Check High-to-Body (HTB) difference
             if(abs(High[leftCandle]-Close[leftCandle])<=precision and abs(High[rightCandle]-Open[rightCandle])<=precision ):
-                signal.append("SELL")
-                return signal
+
+                # Calculate BW MFI
+                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
+                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
+
+                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
+                    signal.append("SELL")
+                    return signal
 
                             
     ######################################################################################
