@@ -83,56 +83,24 @@ def getSignal(rates_frame):
     
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
-    precision = 0.00004
-    
     ######################################################################################
     # BUY SIGNAL
-    
-        
-    # Check if leftCandle is RED and rightCandle is GREEN
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
+        if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
+            if(Close[leftCandle]==Open[rightCandle]):
+                if(Close[rightCandle]>High[leftCandle]):
+                    signal.append("BUY")
 
-        # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
-            
-            # Check Low-to-Body (LTB) difference
-            LLTB = abs(Low[leftCandle]-Close[leftCandle])
-            RLTB = abs(Low[rightCandle]-Open[rightCandle])
-            
-            if( LLTB<=precision and RLTB<=precision  ):
-
-                # Calculate BW MFI
-                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
-                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-
-                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("BUY P = " + f'{LLTB:.5f}' + " " + f'{RLTB:.5f}')
-                    return signal
         
                 
     ######################################################################################
     # SELL SIGNAL
-    
-        
-    # Check if leftCandle is GREEN and rightCandle is RED
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
+        if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
+            if(Close[leftCandle]==Open[rightCandle]):
+                if(Close[rightCandle]<Low[leftCandle]):
+                    signal.append("SELL")
 
-        # Check if the rightCandle ENGULFS the leftCandle
-        if(Open[rightCandle]==Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
-            
-            # Check High-to-Body (HTB) difference
-            LHTB = abs(High[leftCandle]-Close[leftCandle])
-            RHTB = abs(High[rightCandle]-Open[rightCandle])
-            
-            if( LHTB<=precision and RHTB<=precision ):
-
-                # Calculate BW MFI
-                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
-                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-
-                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("SELL P = " + f'{LHTB:.5f}' + " " + f'{RHTB:.5f}')
-                    return signal
 
                             
     ######################################################################################
