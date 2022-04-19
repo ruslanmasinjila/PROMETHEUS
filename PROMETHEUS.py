@@ -89,19 +89,13 @@ def getSignal(rates_frame):
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
         if(abs(Low[leftCandle]-Close[leftCandle])<=allowance and Low[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
-                signal.append("BUY")
-
-        
-                
+                signal.append("BUY")          
     ######################################################################################
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
         if(abs(High[leftCandle]-Close[leftCandle])<=allowance and High[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
-                signal.append("SELL")
-
-
-                            
+                signal.append("SELL")                  
     ######################################################################################
     return signal
 
