@@ -87,15 +87,17 @@ def getSignal(rates_frame):
     ######################################################################################
     # BUY SIGNAL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        if(abs(Low[leftCandle]-Close[leftCandle])<=allowance and Low[rightCandle]==Open[rightCandle]):
+        LTC = abs(Low[leftCandle]-Close[leftCandle])
+        if(LTC<=allowance and Low[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
-                signal.append("BUY")          
+                signal.append("BUY A = "+f'{LTC:.5f}')          
     ######################################################################################
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        if(abs(High[leftCandle]-Close[leftCandle])<=allowance and High[rightCandle]==Open[rightCandle]):
+        HTC = abs(High[leftCandle]-Close[leftCandle])
+        if(HTC<=allowance and High[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
-                signal.append("SELL")                  
+                signal.append("SELL A = "+f'{HTC:.5f}')                 
     ######################################################################################
     return signal
 
