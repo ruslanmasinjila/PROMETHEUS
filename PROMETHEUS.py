@@ -86,7 +86,7 @@ def getSignal(rates_frame):
     # BUY SIGNAL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
         if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
+            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
@@ -99,7 +99,7 @@ def getSignal(rates_frame):
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
         if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
+            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
