@@ -80,15 +80,12 @@ def getSignal(rates_frame):
     
     
     signal        = []
-    allowance     = 0.00001
-    
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
     ######################################################################################
     # BUY SIGNAL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        LTC = abs(Low[leftCandle]-Close[leftCandle])
-        if(LTC<=allowance and Low[rightCandle]==Open[rightCandle]):
+        if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
                 
                 # Calculate BW MFI
@@ -96,13 +93,12 @@ def getSignal(rates_frame):
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("BUY A = "+f'{LTC:.5f}')
+                    signal.append("BUY")
                     return signal
     ######################################################################################
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        HTC = abs(High[leftCandle]-Close[leftCandle])
-        if(HTC<=allowance and High[rightCandle]==Open[rightCandle]):
+        if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
             if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
                 
                 # Calculate BW MFI
@@ -110,7 +106,7 @@ def getSignal(rates_frame):
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
 
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("SELL A = "+f'{HTC:.5f}')
+                    signal.append("SELL")
                     return signal
     ######################################################################################
     return signal
