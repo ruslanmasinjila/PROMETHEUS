@@ -62,8 +62,8 @@ with open('instruments.txt') as f:
 
 
 # TIMEFRAMES
-mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
-strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
+mt5Timeframe   = [M1]
+strTimeframe   = ["M1"]
 
 numCandles     = 2
 offset = 1
@@ -80,24 +80,20 @@ def getSignal(rates_frame):
     
     
     signal        = []
-    allowance     = 0.00001
-    
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
     
     ######################################################################################
     # BUY SIGNAL
     if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        LTC = abs(Low[leftCandle]-Close[leftCandle])
-        if(LTC<=allowance and Low[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]>=Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
-                signal.append("BUY A = "+f'{LTC:.5f}')          
+        if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
+            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
+                signal.append("BUY")          
     ######################################################################################
     # SELL SIGNAL
     if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        HTC = abs(High[leftCandle]-Close[leftCandle])
-        if(HTC<=allowance and High[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]<=Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
-                signal.append("SELL A = "+f'{HTC:.5f}')                 
+        if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
+            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
+                signal.append("SELL")                 
     ######################################################################################
     return signal
 
