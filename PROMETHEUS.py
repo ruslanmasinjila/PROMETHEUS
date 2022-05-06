@@ -80,34 +80,54 @@ def getSignal(rates_frame):
     
     
     signal        = []
+    
     Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
+    
+
     
     ######################################################################################
     # BUY SIGNAL
-    if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-        if(Low[leftCandle]==Close[leftCandle] and Low[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]>High[leftCandle]):
+    
+    
+    # Check if the LOWS are the same
+    if(abs(Low[leftCandle]-Low[rightCandle])==0):
+        
+        # Check if leftCandle is RED and rightCandle is GREEN
+        if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
+            
+            # Check if the rightCandle ENGULFS the leftCandle
+            if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-
+                
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
                     signal.append("BUY")
                     return signal
+        
+                
     ######################################################################################
     # SELL SIGNAL
-    if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-        if(High[leftCandle]==Close[leftCandle] and High[rightCandle]==Open[rightCandle]):
-            if(Close[leftCandle]==Open[rightCandle] and Close[rightCandle]<Low[leftCandle]):
+    
+    # Check if the HIGHS are the same
+    if(abs(High[leftCandle]-High[rightCandle])==0):
+        
+        # Check if leftCandle is GREEN and rightCandle is RED
+        if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
+            
+            # Check if the rightCandle ENGULFS the leftCandle
+            if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
                 
                 # Calculate BW MFI
                 leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
                 rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-
+                
                 if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
                     signal.append("SELL")
                     return signal
+    
+                            
     ######################################################################################
     return signal
 
