@@ -65,71 +65,38 @@ with open('instruments.txt') as f:
 mt5Timeframe   = [M1,M2,M3,M4,M5,M6,M10,M12,M15,M20,M30,H1,H2,H3,H4,H6,H8,H12,D1]
 strTimeframe   = ["M1","M2","M3","M4","M5","M6","M10","M12","M15","M20","M30","H1","H2","H3","H4","H6","H8","H12","D1"]
 
-numCandles     = 2
+numCandles     = 50
 offset = 1
+
+RainbowSignals =[]
+RainbowSignalsTF =[]
 ##########################################################################################
 
 
 # In[ ]:
 
 
-def getSignal(rates_frame):
+def getSignals(rates_frame,strTimeframe):
     
-    rightCandle   = -1
-    leftCandle    = -2
-    
-    
-    signal        = []
-    
-    Time, Open, Close, High, Low, Volume = getTOCHLV(rates_frame)
-    
-
+    Time, Open, Close, High, Low = getTOCHL(rates_frame)
     
     ######################################################################################
-    # BUY SIGNAL
     
+    SMA50 = np.mean(Close)
+    SMA45 = np.mean(Close[5:])
+    SMA40 = np.mean(Close[10:])
+    SMA35 = np.mean(Close[15:])
+    SMA30 = np.mean(Close[20:])
+    SMA25 = np.mean(Close[25:])
+    SMA20 = np.mean(Close[30:])
     
-    # Check if the LOWS are the same
-    if(abs(Low[leftCandle]-Low[rightCandle])==0):
+    if(SMA45<SMA50 and SMA40<SMA45 and SMA35<SMA40 and SMA30<SMA35 and SMA25<SMA30 and SMA20<SMA25):
+        RainbowSignals.append("SELL")
+        RainbowSignalsTF.append(strTimeframe)
         
-        # Check if leftCandle is RED and rightCandle is GREEN
-        if(Close[leftCandle]<Open[leftCandle] and Close[rightCandle]>Open[rightCandle]):
-            
-            # Check if the rightCandle ENGULFS the leftCandle
-            if(Open[rightCandle]<=Close[leftCandle] and Close[rightCandle]>High[leftCandle]):
-                
-                # Calculate BW MFI
-                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
-                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-                
-                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("BUY")
-                    return signal
-        
-                
-    ######################################################################################
-    # SELL SIGNAL
-    
-    # Check if the HIGHS are the same
-    if(abs(High[leftCandle]-High[rightCandle])==0):
-        
-        # Check if leftCandle is GREEN and rightCandle is RED
-        if(Close[leftCandle]>Open[leftCandle] and Close[rightCandle]<Open[rightCandle]):
-            
-            # Check if the rightCandle ENGULFS the leftCandle
-            if(Open[rightCandle]>=Close[leftCandle] and Close[rightCandle]<Low[leftCandle]):
-                
-                # Calculate BW MFI
-                leftCandleMFI =  (High[leftCandle]-Low[leftCandle])/Volume[leftCandle]
-                rightCandleMFI = (High[rightCandle]-Low[rightCandle])/Volume[rightCandle]
-                
-                if(Volume[rightCandle]>Volume[leftCandle] and rightCandleMFI>leftCandleMFI):
-                    signal.append("SELL")
-                    return signal
-    
-                            
-    ######################################################################################
-    return signal
+    if(SMA45>SMA50 and SMA40>SMA45 and SMA35>SMA40 and SMA30>SMA35 and SMA25>SMA30 and SMA20>SMA25):
+        RainbowSignals.append("BUY")
+        RainbowSignalsTF.append(strTimeframe)
 
 
 # In[ ]:
@@ -149,13 +116,12 @@ def getRates(currency_pair, mt5Timeframe, numCandles):
 
 
 # Decomposes the DataFrame into individual lists for Time, Close, High and Low
-def getTOCHLV(rates_frame):
+def getTOCHL(rates_frame):
     return  (list(rates_frame["time"]), 
             list(rates_frame["open"]), 
             list(rates_frame["close"]),
             list(rates_frame["high"]),
-            list(rates_frame["low"]),
-            list(rates_frame["tick_volume"]))
+            list(rates_frame["low"]))
 
 ##########################################################################################
 
@@ -171,18 +137,20 @@ while(True):
     
     display = banner
     for cp in currency_pairs:
-        display+=cp+"\n"
+        display+="["+cp+"]"+"\n"
+        RainbowSignals =[]
+        RainbowSignalsTF =[]
         for t in range(len(mt5Timeframe)):
-            
             rates_frame = getRates(cp, mt5Timeframe[t], numCandles)
-            signal=getSignal(rates_frame)
-            if(len(signal)>0):
+            getSignals(rates_frame,strTimeframe[t])
+        if(all(x == RainbowSignals[0] for x in RainbowSignals)):
+            if(RainbowSignalsTF[0]=="M1"):
+                display+=" ".join(RainbowSignals)+"\n"
+                display+=" ".join(RainbowSignalsTF)+"\n"
                 winsound.Beep(freq, duration)
-                display+=signal[0] + " ********************************* " + strTimeframe[t]+"\n"
-                
+                    
         display+="==============================\n"
     print(display)
     time.sleep(60)
     os.system('cls' if os.name == 'nt' else 'clear')
-print("DONE")
 
