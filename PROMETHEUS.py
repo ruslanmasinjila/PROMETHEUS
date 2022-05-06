@@ -78,6 +78,8 @@ RainbowSignalsTF =[]
 
 def getSignals(rates_frame,strTimeframe):
     
+    fractalCandle = -3
+    
     Time, Open, Close, High, Low = getTOCHL(rates_frame)
     
     ######################################################################################
@@ -91,12 +93,30 @@ def getSignals(rates_frame,strTimeframe):
     SMA20 = np.mean(Close[30:])
     
     if(SMA45<SMA50 and SMA40<SMA45 and SMA35<SMA40 and SMA30<SMA35 and SMA25<SMA30 and SMA20<SMA25):
-        RainbowSignals.append("SELL")
-        RainbowSignalsTF.append(strTimeframe)
+        if(strTimeframe=="M1" and High[fractalCandle]<SMA20):
+            if(High[fractalCandle]>High[fractalCandle+1] and
+               High[fractalCandle]>High[fractalCandle+2] and
+               High[fractalCandle]>High[fractalCandle-2] and
+               High[fractalCandle]>High[fractalCandle-1]):
+                RainbowSignals.append("SELL")
+                RainbowSignalsTF.append(strTimeframe)
+        else:
+            RainbowSignals.append("SELL")
+            RainbowSignalsTF.append(strTimeframe)
+                
         
     if(SMA45>SMA50 and SMA40>SMA45 and SMA35>SMA40 and SMA30>SMA35 and SMA25>SMA30 and SMA20>SMA25):
-        RainbowSignals.append("BUY")
-        RainbowSignalsTF.append(strTimeframe)
+        if(strTimeframe=="M1" and Low[fractalCandle]>SMA20):
+            if(Low[fractalCandle]<Low[fractalCandle+1] and
+               Low[fractalCandle]<Low[fractalCandle+2] and
+               Low[fractalCandle]<Low[fractalCandle-2] and
+               Low[fractalCandle]<Low[fractalCandle-1]):
+                RainbowSignals.append("BUY")
+                RainbowSignalsTF.append(strTimeframe)
+        else:
+            RainbowSignals.append("BUY")
+            RainbowSignalsTF.append(strTimeframe)
+                
 
 
 # In[ ]:
